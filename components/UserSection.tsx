@@ -15,9 +15,9 @@ export default function UserSection({ currentUser, users }: UserSectionProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle>Your Profile</CardTitle>
+          <CardTitle className="dark:text-white">Your Profile</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-4">
@@ -26,16 +26,16 @@ export default function UserSection({ currentUser, users }: UserSectionProps) {
               <AvatarFallback>{currentUser.name?.charAt(0) || 'U'}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium">{currentUser.name}</p>
-              <p className="text-sm text-muted-foreground">{currentUser.email}</p>
+              <p className="font-medium dark:text-white">{currentUser.name}</p>
+              <p className="text-sm text-muted-foreground dark:text-gray-400">{currentUser.email}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle>Suggested Users</CardTitle>
+          <CardTitle className="dark:text-white">Suggested Users</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -46,8 +46,8 @@ export default function UserSection({ currentUser, users }: UserSectionProps) {
                   <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate max-w-[180px]">
+                  <p className="text-sm font-medium dark:text-white">{user.name}</p>
+                  <p className="text-xs text-muted-foreground dark:text-gray-400 truncate max-w-[180px]">
                     {user.company.catchPhrase}
                   </p>
                 </div>
