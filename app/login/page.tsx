@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import AnimatedBackground from '../../components/AnimatedBackground';
 import ThemeToggle from '../../components/ThemeToggle';
 import { Loader } from '../../components/ui/Loader';
+import ThreeDText from '@/components/ThreeDText';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -70,68 +71,76 @@ export default function LoginPage() {
         <ThemeToggle onThemeChange={handleThemeChange} />
       </div>
       
-      <Card className={cardClasses}>
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription className={theme === 'dark' ? "text-gray-400" : "text-gray-500"}>
-            Sign in to your account to continue
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium">Email</label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your email"
-                required
-                disabled={isLoading}
-                className={theme === 'dark' ? "bg-gray-800 border-gray-700" : ""}
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">Password</label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-                disabled={isLoading}
-                className={theme === 'dark' ? "bg-gray-800 border-gray-700" : ""}
-              />
-              <p className={`text-xs ${theme === 'dark' ? "text-gray-400" : "text-gray-500"}`}>
-                (For demo: use any email from JSONPlaceholder users, any password)
-              </p>
-            </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isLoading}
-              variant={theme === 'dark' ? "outline" : "default"}
-            >
-              {isLoading ? (
-                <div className="flex items-center">
-                  <Loader size="small" color={theme === 'dark' ? "gray-300" : "white"} />
-                  <span className="ml-2">Signing In...</span>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="mb-8 text-center">
+          <ThreeDText text="Naughty Bot" size="2xl" className="mb-8" />
+        </div>
+        
+        <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md transition-colors duration-300">
+          <Card className={cardClasses}>
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
+              <CardDescription className={theme === 'dark' ? "text-gray-400" : "text-gray-500"}>
+                Sign in to your account to continue
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="username" className="text-sm font-medium">Email</label>
+                  <Input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    disabled={isLoading}
+                    className={theme === 'dark' ? "bg-gray-800 border-gray-700" : ""}
+                  />
                 </div>
-              ) : (
-                "Sign In"
-              )}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className={`text-sm ${theme === 'dark' ? "text-gray-400" : "text-gray-500"}`}>
-            Demo app using JSONPlaceholder API
-          </p>
-        </CardFooter>
-      </Card>
+                <div className="space-y-2">
+                  <label htmlFor="password" className="text-sm font-medium">Password</label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    required
+                    disabled={isLoading}
+                    className={theme === 'dark' ? "bg-gray-800 border-gray-700" : ""}
+                  />
+                  <p className={`text-xs ${theme === 'dark' ? "text-gray-400" : "text-gray-500"}`}>
+                    (For demo: use any email from JSONPlaceholder users, any password)
+                  </p>
+                </div>
+                {error && <p className="text-sm text-red-500">{error}</p>}
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={isLoading}
+                  variant={theme === 'dark' ? "outline" : "default"}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center">
+                      <Loader size="small" color={theme === 'dark' ? "gray-300" : "white"} />
+                      <span className="ml-2">Signing In...</span>
+                    </div>
+                  ) : (
+                    "Sign In"
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <p className={`text-sm ${theme === 'dark' ? "text-gray-400" : "text-gray-500"}`}>
+                Demo app using JSONPlaceholder API
+              </p>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 } 

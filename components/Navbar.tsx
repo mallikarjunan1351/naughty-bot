@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import ThemeToggle from './ThemeToggle';
 
+
 export default function Navbar() {
   const { data: session } = useSession();
 
@@ -15,7 +16,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/feed" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-blue-600 dark:text-blue-400">SocialFeed</span>
+              <span className="text-xl font-bold text-blue-600 dark:text-blue-400">Naughty Bot</span>
             </Link>
           </div>
           

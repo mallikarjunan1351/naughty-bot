@@ -22,6 +22,7 @@ export interface User {
     catchPhrase: string;
     bs: string;
   };
+  image: string;
 }
 
 interface UsersState {

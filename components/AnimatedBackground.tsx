@@ -15,6 +15,7 @@ export default function AnimatedBackground({
   const containerRef = useRef<HTMLDivElement>(null);
   // Use state to track client-side rendering
   const [isMounted, setIsMounted] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     // Set mounted state to true when component mounts on client
@@ -43,16 +44,15 @@ export default function AnimatedBackground({
     
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     
-    // Set particle color based on theme
-    const particleColor = theme === 'dark' 
-      ? '#3b82f6' // Blue for dark theme
-      : '#93c5fd'; // Lighter blue for light theme
+    // Adjust particle colors based on theme
+    const particleColor = isDark ? '#4fd1ff' : '#0066ff';
+    const particleOpacity = isDark ? 0.7 : 0.5;
     
     const particlesMaterial = new THREE.PointsMaterial({
       size: intensity === 'high' ? 0.005 : 0.003, // Smaller particles for low intensity
       color: new THREE.Color(particleColor),
       transparent: true,
-      opacity: intensity === 'high' ? 1 : 0.5, // Lower opacity for low intensity
+      opacity: particleOpacity,
       blending: THREE.AdditiveBlending
     });
     
@@ -100,7 +100,28 @@ export default function AnimatedBackground({
       particlesMaterial.dispose();
       renderer.dispose();
     };
-  }, [theme, intensity]);
+  }, [theme, intensity, isDark]);
+
+  useEffect(() => {
+    // Check if we're in the browser
+    if (typeof window !== 'undefined') {
+      // Initial check
+      setIsDark(document.documentElement.classList.contains('dark'));
+      
+      // Set up an observer to watch for theme changes
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class') {
+            setIsDark(document.documentElement.classList.contains('dark'));
+          }
+        });
+      });
+      
+      observer.observe(document.documentElement, { attributes: true });
+      
+      return () => observer.disconnect();
+    }
+  }, []);
 
   // Get background gradient based on theme and intensity
   const getBackgroundClass = () => {

@@ -7,8 +7,8 @@ import { ReduxProvider } from '@/components/providers/ReduxProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Social Feed App',
-  description: 'A social feed application built with Next.js',
+  title: 'Naughty Bot',
+  description: 'More Than a Chat, It’s an Experience.',
 };
 
 export default function RootLayout({
