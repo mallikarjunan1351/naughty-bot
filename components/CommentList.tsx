@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Comment } from '../lib/store/slices/commentsSlice';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Comment } from '../types/comment';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Send } from 'lucide-react';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
 
@@ -147,9 +148,15 @@ export default function CommentList({ postId, theme = 'light' }: CommentListProp
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
-          className={theme === 'dark' ? 'bg-gray-700 border-gray-600' : ''}
+          className={`${theme === 'dark' ? 'bg-gray-700/50 border-gray-600' : 'bg-white/50 border-gray-200'} backdrop-blur-sm`}
         />
-        <Button onClick={handleAddComment}>Post</Button>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={handleAddComment}
+          className="p-2 rounded-full bg-blue-500 text-white self-end"
+        >
+          <Send size={18} />
+        </motion.button>
       </div>
       
       {loading ? (
@@ -157,64 +164,69 @@ export default function CommentList({ postId, theme = 'light' }: CommentListProp
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
         </div>
       ) : (
-        <div className="space-y-4">
-          {comments.map(comment => (
-            <div 
-              key={comment.id} 
-              className={`p-3 rounded-lg ${
-                theme === 'dark' 
-                  ? 'bg-gray-700/70 border border-gray-600' 
-                  : 'bg-gray-100/80 border border-gray-200'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <Avatar className="h-6 w-6 bg-gray-200">
-                    <AvatarFallback>
-                      {comment.email.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {comment.email}
-                  </p>
+        <AnimatePresence>
+          <div className="space-y-4">
+            {comments.map(comment => (
+              <motion.div 
+                key={comment.id} 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className={`p-3 rounded-lg backdrop-blur-sm ${
+                  theme === 'dark' 
+                    ? 'bg-gray-700/40 border border-gray-600/50' 
+                    : 'bg-white/40 border border-gray-200/50'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-2">
+                    <Avatar className="h-6 w-6 bg-gradient-to-br from-indigo-400 to-purple-500">
+                      <AvatarFallback>
+                        {comment.email.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {comment.email.split('@')[0]}
+                    </p>
+                  </div>
+                  
+                  {isCurrentUserComment(comment) && (
+                    <div className="flex space-x-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6" 
+                        onClick={() => handleEditComment(comment)}
+                      >
+                        <Edit2 size={14} />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6" 
+                        onClick={() => handleDeleteComment(comment.id)}
+                      >
+                        <Trash2 size={14} />
+                      </Button>
+                    </div>
+                  )}
                 </div>
                 
-                {isCurrentUserComment(comment) && (
-                  <div className="flex space-x-1">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-6 w-6" 
-                      onClick={() => handleEditComment(comment)}
-                    >
-                      <Edit2 size={14} />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-6 w-6" 
-                      onClick={() => handleDeleteComment(comment.id)}
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  </div>
-                )}
-              </div>
-              
-              <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                {comment.body}
-              </p>
-            </div>
-          ))}
-        </div>
+                <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {comment.body}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatePresence>
       )}
 
       {/* Edit Comment Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className={
           theme === 'dark' 
-            ? 'bg-gray-800 border-gray-700 text-white' 
-            : 'bg-white border-gray-200'
+            ? 'bg-gray-800/90 backdrop-blur-md border-gray-700 text-white' 
+            : 'bg-white/90 backdrop-blur-md border-gray-200'
         }>
           <DialogHeader>
             <DialogTitle>Edit Comment</DialogTitle>
@@ -223,20 +235,20 @@ export default function CommentList({ postId, theme = 'light' }: CommentListProp
           {editingComment && (
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <Avatar className="h-6 w-6 bg-gray-200">
+                <Avatar className="h-6 w-6 bg-gradient-to-br from-indigo-400 to-purple-500">
                   <AvatarFallback>
                     {editingComment.email.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {editingComment.email}
+                  {editingComment.email.split('@')[0]}
                 </p>
               </div>
               
               <Textarea
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
-                className={theme === 'dark' ? 'bg-gray-700 border-gray-600' : ''}
+                className={theme === 'dark' ? 'bg-gray-700/50 border-gray-600' : 'bg-white/50 border-gray-200'}
               />
             </div>
           )}

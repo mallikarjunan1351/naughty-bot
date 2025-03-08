@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -51,6 +51,9 @@ export default function FeedPage() {
   const { comments, status: commentsStatus } = useSelector((state: RootState) => state.comments);
   const { users: reduxUsers, status: usersStatus } = useSelector((state: RootState) => state.users);
 
+  // Add a ref to track the previous selectedUserId
+  const prevSelectedUserIdRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
@@ -100,12 +103,18 @@ export default function FeedPage() {
     fetchUsers();
   }, []);
 
-  // Fetch posts from JSONPlaceholder
+  // Modify the useEffect for fetching posts
   useEffect(() => {
+    // Skip the API call if the selectedUserId hasn't changed
+    if (prevSelectedUserIdRef.current === selectedUserId) {
+      return;
+    }
+    
     const fetchPosts = async () => {
       setLoading(true);
       try {
         // If a user is selected, filter posts by user ID
+        // By default, selectedUserId is null, so all posts will be fetched
         const url = selectedUserId 
           ? `https://jsonplaceholder.typicode.com/posts?userId=${selectedUserId}` 
           : 'https://jsonplaceholder.typicode.com/posts';
@@ -148,6 +157,9 @@ export default function FeedPage() {
     };
     
     fetchPosts();
+    
+    // Update the ref with the current selectedUserId
+    prevSelectedUserIdRef.current = selectedUserId;
   }, [selectedUserId]);
 
   const handleSelectUser = (userId: string | null) => {
@@ -178,14 +190,15 @@ export default function FeedPage() {
       <div className="relative z-10 min-h-screen">
         <Navbar />
         
-        {/* New horizontal user scroller */}
+        {/* New horizontal user scroller - now fixed */}
         <UserScroller 
           users={users} 
           onSelectUser={handleSelectUser} 
           selectedUserId={selectedUserId} 
         />
         
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Add padding-top to account for fixed UserScroller */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-36">
           <div className="container mx-auto">
             {isLoading ? (
               <div className="space-y-6">

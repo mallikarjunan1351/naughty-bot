@@ -18,17 +18,21 @@ interface UserScrollerProps {
 
 export default function UserScroller({ users, onSelectUser, selectedUserId }: UserScrollerProps) {
   return (
-    <div className="w-full py-4 border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="fixed top-16 left-0 right-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-md border-b border-gray-200/50 dark:border-gray-700/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="overflow-x-auto no-scrollbar">
-          <div className="ml-2 flex space-x-6 py-2 min-w-max">
+          <div className="flex space-x-6 py-2 min-w-max">
             {/* All Users option */}
             <div 
               className="flex flex-col items-center cursor-pointer"
-              onClick={() => onSelectUser(null)}
+              onClick={() => {
+                if (selectedUserId !== null) {
+                  onSelectUser(null);
+                }
+              }}
             >
               <div 
-                className={`relative w-16 h-16 rounded-full overflow-hidden mb-2 ${
+                className={`relative w-14 h-14 rounded-full overflow-hidden mb-2 ${
                   selectedUserId === null 
                     ? 'ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-gray-900' 
                     : ''
@@ -37,7 +41,11 @@ export default function UserScroller({ users, onSelectUser, selectedUserId }: Us
                 <div className="w-full h-full flex items-center justify-center">
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className="h-8 w-8 text-gray-500 dark:text-gray-400" 
+                    className={`h-8 w-8 ${
+                      selectedUserId === null 
+                        ? 'text-blue-500 dark:text-blue-400' 
+                        : 'text-gray-500 dark:text-gray-400'
+                    }`}
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
@@ -51,7 +59,11 @@ export default function UserScroller({ users, onSelectUser, selectedUserId }: Us
                   </svg>
                 </div>
               </div>
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate max-w-[80px] text-center">
+              <span className={`text-xs font-medium truncate max-w-[80px] text-center ${
+                selectedUserId === null 
+                  ? 'text-blue-500 dark:text-blue-400 font-semibold' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}>
                 All Users
               </span>
             </div>
@@ -61,10 +73,14 @@ export default function UserScroller({ users, onSelectUser, selectedUserId }: Us
               <div 
                 key={user.id} 
                 className="flex flex-col items-center cursor-pointer"
-                onClick={() => onSelectUser(user.id)}
+                onClick={() => {
+                  if (selectedUserId !== user.id) {
+                    onSelectUser(user.id);
+                  }
+                }}
               >
                 <div 
-                  className={`relative w-16 h-16 rounded-full overflow-hidden mb-2 ${
+                  className={`relative w-14 h-14 rounded-full overflow-hidden mb-2 ${
                     selectedUserId === user.id 
                       ? 'ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-gray-900' 
                       : ''
@@ -75,7 +91,7 @@ export default function UserScroller({ users, onSelectUser, selectedUserId }: Us
                       src={user.image} 
                       alt={user.name} 
                       fill
-                      sizes="64px"
+                      sizes="56px"
                       priority={index < 5}
                       className="object-cover"
                     />
