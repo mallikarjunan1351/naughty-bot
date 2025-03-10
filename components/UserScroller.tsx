@@ -23,8 +23,8 @@ export default function UserScroller({ users, onSelectUser, selectedUserId }: Us
         <div className="overflow-x-auto no-scrollbar">
           <div className="flex space-x-6 py-2 min-w-max">
             {/* All Users option */}
-            <div 
-              className="flex flex-col items-center cursor-pointer"
+            {/* <div 
+              className="ml-2 flex flex-col items-center cursor-pointer"
               onClick={() => {
                 if (selectedUserId !== null) {
                   onSelectUser(null);
@@ -41,11 +41,7 @@ export default function UserScroller({ users, onSelectUser, selectedUserId }: Us
                 <div className="w-full h-full flex items-center justify-center">
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className={`h-8 w-8 ${
-                      selectedUserId === null 
-                        ? 'text-blue-500 dark:text-blue-400' 
-                        : 'text-gray-500 dark:text-gray-400'
-                    }`}
+                    className="h-8 w-8 text-gray-500 dark:text-gray-400" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
@@ -59,14 +55,10 @@ export default function UserScroller({ users, onSelectUser, selectedUserId }: Us
                   </svg>
                 </div>
               </div>
-              <span className={`text-xs font-medium truncate max-w-[80px] text-center ${
-                selectedUserId === null 
-                  ? 'text-blue-500 dark:text-blue-400 font-semibold' 
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}>
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate max-w-[80px] text-center">
                 All Users
               </span>
-            </div>
+            </div> */}
             
             {/* Individual users */}
             {users.map((user, index) => (

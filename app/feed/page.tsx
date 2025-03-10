@@ -41,7 +41,7 @@ export default function FeedPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [posts, setPosts] = useState<Post[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -70,12 +70,20 @@ export default function FeedPage() {
 
   // Apply theme from localStorage on component mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
-    setTheme(initialTheme);
+    // Check if we're in the browser environment
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null;
+      
+      // Default to dark if no theme is saved
+      const initialTheme = savedTheme || 'dark';
+      document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+      setTheme(initialTheme);
+      
+      // Save the initial theme to localStorage if not already set
+      if (!savedTheme) {
+        localStorage.setItem('theme', initialTheme);
+      }
+    }
   }, []);
 
   // Fetch all users from JSONPlaceholder
@@ -114,7 +122,6 @@ export default function FeedPage() {
       setLoading(true);
       try {
         // If a user is selected, filter posts by user ID
-        // By default, selectedUserId is null, so all posts will be fetched
         const url = selectedUserId 
           ? `https://jsonplaceholder.typicode.com/posts?userId=${selectedUserId}` 
           : 'https://jsonplaceholder.typicode.com/posts';
@@ -161,6 +168,12 @@ export default function FeedPage() {
     // Update the ref with the current selectedUserId
     prevSelectedUserIdRef.current = selectedUserId;
   }, [selectedUserId]);
+
+  useEffect(() => {
+    if (users.length > 0 && selectedUserId === null) {
+      setSelectedUserId(users[0].id);
+    }
+  }, [users, selectedUserId]);
 
   const handleSelectUser = (userId: string | null) => {
     setSelectedUserId(userId);

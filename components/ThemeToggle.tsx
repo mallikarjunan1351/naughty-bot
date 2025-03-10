@@ -9,18 +9,19 @@ interface ThemeToggleProps {
 }
 
 export default function ThemeToggle({ onThemeChange }: ThemeToggleProps) {
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   // Load theme from localStorage on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || 'dark';
     
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
     setTheme(initialTheme);
-    
-    // Apply theme to document
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+    
+    if (!savedTheme) {
+      localStorage.setItem('theme', initialTheme);
+    }
     
     if (onThemeChange) {
       onThemeChange(initialTheme);

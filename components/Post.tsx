@@ -22,7 +22,7 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 50) + 5);
   const [commentCount, setCommentCount] = useState(Math.floor(Math.random() * 20) + 1);
   const [shareCount, setShareCount] = useState(Math.floor(Math.random() * 10));
@@ -33,9 +33,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
     // Check if we're in the browser environment
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null;
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       
-      const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+      // Default to dark if no theme is saved
+      const initialTheme = savedTheme || 'dark';
       setTheme(initialTheme);
       
       // Listen for theme changes in the document

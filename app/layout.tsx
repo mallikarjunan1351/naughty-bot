@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Naughty Bot',
-  description: 'More Than a Chat, It’s an Experience.',
+  description: 'More Than a Chat, It\'s an Experience.',
 };
 
 export default function RootLayout({
@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className} suppressHydrationWarning={true}>
+    <html lang="en" className="dark">
+      <body className="min-h-screen bg-gray-100 dark:bg-gray-900">
         <AuthProvider>
           <ReduxProvider>
             {children}
